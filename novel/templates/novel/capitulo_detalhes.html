@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{%block title%}{{ capitulo.titulo_cap }}{%endblock%}
+{% block conteudo %}
+
+<div class="row">
+    <div class="col-lg-3 col-xl-1">
+        <div class="card card-custom" data-sticky="true" data-margin-top="140px" data-sticky-for="1023"
+             data-sticky-class="sticky">
+        </div>
+    </div>
+    <div class="col-lg-6 col-xl-10">
+        <div class="card-body">
+            {{ capitulo.conteudo_cap|safe }}
+        </div>
+    </div>
+</div>
+<br/>
+{% endblock %}

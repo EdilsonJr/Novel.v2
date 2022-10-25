@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{%block title%}{{ novel.titulo }} - NovelCenter{%endblock%}
+
+{% block conteudo %}
+
+<div class="container" xmlns="http://www.w3.org/1999/html">
+    <div class="row pt-5">
+        <div class="col-xl"></div>
+        <div class="col-xl-8 text-center">
+            <p class="text-muted">
+                <small style="font-size: 12px;">
+                    {{ novel.autor }} | {{ novel.data }} | {{ novel.categoria }}
+                </small>
+            </p>
+            <h3 class="display-3">{{ novel.titulo }}</h3>
+            <div class="card-footer"></div>
+            <div>
+                {% if novel.wallpaper %}
+                <img class="img-fluid pb-5 " src="{{ novel.wallpaper.url }}" alt="{{ novel.titulo }}">
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-xl"></div>
+    </div>
+
+    <div class="row pt-5">
+        <div class="col-xl"></div>
+        <div class="col-xl-8">
+            <br/>
+            <h4>{{ novel.excerto|safe }} </h4></br>
+            <h4><strong>Títulos alternativos</strong> - {{ novel.outros_titulos }}</h4>
+            <h4><strong>Autor</strong> - {{ novel.escritor }}</h4>
+            <h4><strong>Ilustrador</strong> - {{ novel.ilustrador }}</h4>
+            <h4><strong>Gênero</strong> - {{ novel.categoria }}</h4>
+            <h4><strong>Status</strong> - {{ novel.status }}</h4>
+            <h4><strong>Volumes disponiveis</strong> - {{ novel.qdt_volumes }}</h4>
+        </div>
+        <div class="col-xl"></div>
+    </div>
+
+    </br>
+    </br>
+
+    <div class="card-footer"></div>
+
+
+    <div>
+        <div align="center">
+            <h1 class="display-4">Volumes</h1>
+        </div>
+    </div>
+
+    </br>
+
+    <div class="d-flex flex-column-fluid">
+        <div class="container">
+            <div class="row">
+                {% for volume in novel.volume_set.all %}
+                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+                    <div class="card card-custom gutter-b card-stretch">
+                        <div class="card-body pt-4">
+                            <!--begin::User-->
+                            <div class="d-flex align-items-center mb-7" style="justify-content: center;">
+                                <!--begin::Pic-->
+                                {% if volume.capa_vol %}
+                                <a href="{% url 'volume_detalhes' volume.slug_vol %}">
+                                    <img src="{{ volume.capa_vol.url }}" alt="image"></a>
+                                {% endif %}
+                                <!--end::Pic-->
+                            </div>
+                            <!--end::User-->
+                            <!--begin::Desc-->
+                            <!--begin::Volume-->
+                            <div class="d-flex flex-column" align="center">
+                                <h3>
+                                    {{ volume.vol_vol }}
+                                </h3>
+                                <br/>
+                            </div>
+                            <!--end::Volume-->
+                            <!--begin::Title-->
+                            <div class="d-flex flex-column" align="center">
+                                <a href="{% url 'volume_detalhes' volume.slug_vol %}"
+                                   class="text-dark font-weight-bold text-hover-primary font-size-h4 mb-0">{{ volume.novel_vol }}</a>
+<!--                                <span class="text-muted font-weight-bold">{{ volume.novel_vol }}</span>-->
+                            </div>
+                            <!--end::Title-->
+                            <p class="mb-7">
+                                <!--end::Desc-->
+                                <!--begin::Info-->
+                            <div class="mb-7">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-dark-75 font-weight-bolder mr-2">Publicado em:</span>
+                                    <span class="text-muted font-weight-bold">{{ volume.data_vol }}</span>
+                                </div>
+                            </div>
+                            <!--end::Info-->
+                            <a href="{% url 'volume_detalhes' volume.slug_vol %}"
+                               class="btn btn-block btn-sm btn-light-success font-weight-bolder text-uppercase py-4">Ler</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="card-footer"></div>
+</div>
+
+
+<div>
+    <div align="center">
+        <h1 class="display-4">Comentar</h1>
+    </div>
+</div>
+
+<div class="container" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
+        <div class="col-xl-12">
+            <form method="POST" class="form" action="#envia_comentario">
+                {% csrf_token %}
+                <div class="card-body">
+                    <div class="form-group">
+                        <label style="font-size: 14px;">Nome:</label>
+                        <input type="text" name="nome_comentario" maxlength="255"
+                               class="form-control form-control-solid" placeholder="Digite seu nome:">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size: 14px;">E-mail</label>
+                        <input type="email" name="email_comentario" maxlength="254"
+                               class="form-control form-control-solid" placeholder="Digite seu email:">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size: 14px;">Comentário:</label>
+                        <textarea class="form-control form-control-solid" rows="5" name="comentario"
+                                  placeholder="Digite seu coméntario:"></textarea>
+                    </div>
+                </div>
+                <div align="center">
+                    <button id="envia_comentario" type="submit" class="btn btn-primary mr-2">Enviar</button>
+                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+
+            </br>
+
+            <div class="card-footer"></div>
+
+            {% if comentarios %}
+            <div>
+                <div align="center">
+                    <h1 class="display-5">Comentários</h1>
+                </div>
+                </br>
+
+                {% for comentario in comentarios %}
+
+                <div class="card card-custom" style="background-color: #3D3D3D">
+                    <div class="card-header border-0">
+                        <div class="card-title">
+                                <span class="card-icon">
+                                    <i class="flaticon2-chat-1 text-white"></i>
+                                </span>
+                            <h3 class="card-label text-white">
+                                {{ comentario.nome_comentario }}
+                                </br>
+                                <small style="font-size: 12px;">{{ comentario.data_comentario }}</small>
+                            </h3>
+
+                        </div>
+                    </div>
+                    <div class="separator separator-solid separator-white opacity-20"></div>
+                    <div class="card-body text-white">
+                        <span style="font-size: 16px;">
+                            {{ comentario.comentario}}
+                        </span>
+                    </div>
+                </div>
+                </br>
+
+                {% endfor %}
+
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
